@@ -1,0 +1,2 @@
+hello i am testing if i can commit only a single file using git while changes are there in other files also. 
+i am doing this from matlab cli.
