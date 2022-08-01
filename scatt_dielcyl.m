@@ -38,7 +38,7 @@ end
  grid on; axis('equal'); hold off;
 set(gca,'fontsize',20)
 %% formulating and solving the problem
-a = lambda / 55; %side of the square patch
+a = lambda / 50; %side of the square patch
 r = 0.56 * a;    %radius of equivalent circle with same cross section
 
 %forming matrix C in the equation [C][E] = Ei
