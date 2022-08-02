@@ -60,19 +60,19 @@ Ei = E0 * exp(-1i * k * alpha);     %incident electric field
 %solving matrix equation
 E = C\Ei';      %total electric field on the dielectric volume
 
-%% plotting the total field 
+%% calculating the total field 
 phi = linspace(0,pi,228);   %for circular variation around the shell
-rho0 = (0.3*lambda - 0.25*lambda) + 0.25*lambda;
-% rho0 = 0.3*lambda;          %distance where we want to check the field
+%rho0 = (0.3*lambda - 0.25*lambda) + 0.25*lambda;
+rho0 = 3*lambda;          %distance where we want to check the field
 
 %temporary variable 'temp' to store the amplitude of the field
 temp = -1i * (pi * k / 2) * sqrt(2i / (pi * k * rho0)) ...
     * exp(-1i * k * rho0) * (epsilon-1) * r * besselj(1,(k * r)) ;
 temp1 = cos(phi.')*X1 + sin(phi.')*Y1;  %to hold angular variation
 Es = temp * exp(1i * k * temp1) * E;    %required field
-Es = flip(abs(Es))/1.5;                     %absolute value of the complex field
+Es = flip(abs(Es));                     %absolute value of the complex field
 
-%plotting the field w.r.t. phi variation
+%% plotting the field w.r.t. phi variation
 AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
 plot(phi*180/pi,Es,'linewidth',3);
 hold on; grid on; set(gca,'fontsize',20)
@@ -85,5 +85,6 @@ rr = import_rr.rr;
 plot(rr(:,1),rr(:,2),linewidth = 2);
 
 %% calculating the error between reference and implemented data
-error = norm(Es - rr(:,2));
-% plot(phi*180/pi,error); 
+error_vec = Es - rr(:,2);
+error = norm(error_vec);
+plot(phi*180/pi,error_vec,linewidth = 2); 
