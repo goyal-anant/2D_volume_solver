@@ -63,7 +63,7 @@ E = C\Ei';      %total electric field on the dielectric volume
 %% calculating the total field 
 phi = linspace(0,pi,228);   %for circular variation around the shell
 %rho0 = (0.3*lambda - 0.25*lambda) + 0.25*lambda;
-rho0 = 3*lambda;          %distance where we want to check the field
+rho0 = 0.5*lambda;          %distance where we want to check the field
 
 %temporary variable 'temp' to store the amplitude of the field
 temp = -1i * (pi * k / 2) * sqrt(2i / (pi * k * rho0)) ...
@@ -87,4 +87,4 @@ plot(rr(:,1),rr(:,2),linewidth = 2);
 %% calculating the error between reference and implemented data
 error_vec = Es - rr(:,2);
 error = norm(error_vec);
-plot(phi*180/pi,error_vec,linewidth = 2); 
+plot(phi*180/pi,error_vec,linewidth = 2);
