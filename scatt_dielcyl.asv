@@ -70,7 +70,7 @@ temp = -1i * (pi * k / 2) * sqrt(2i / (pi * k * rho0)) ...
     * exp(-1i * k * rho0) * (epsilon-1) * r * besselj(1,(k * r)) ;
 temp1 = cos(phi.')*X1 + sin(phi.')*Y1;  %to hold angular variation
 Es = temp * exp(1i * k * temp1) * E;    %required field
-Es = flip(abs(Es))/1.5;                     %absolute value of the complex field
+Es = flip(abs(Es));                     %absolute value of the complex field
 
 %plotting the field w.r.t. phi variation
 AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
@@ -85,5 +85,5 @@ rr = import_rr.rr;
 plot(rr(:,1),rr(:,2),linewidth = 2);
 
 %% calculating the error between reference and implemented data
-error = norm(Es - rr(:,2));
-% plot(phi*180/pi,error); 
+error = Es - rr(:,2);
+plot(error); 
