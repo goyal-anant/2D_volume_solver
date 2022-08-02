@@ -38,7 +38,7 @@ end
  grid on; axis('equal'); hold off;
 set(gca,'fontsize',20)
 %% formulating and solving the problem
-a = lambda / 50; %side of the square patch
+a = lambda / 45; %side of the square patch
 r = 0.56 * a;    %radius of equivalent circle with same cross section
 
 %forming matrix C in the equation [C][E] = Ei
@@ -87,4 +87,4 @@ plot(rr(:,1),rr(:,2),linewidth = 2);
 %% calculating the error between reference and implemented data
 error_vec = Es - rr(:,2);
 error = norm(error_vec);
-plot(phi*180/pi,error_vec,linewidth = 2);
+% plot(phi*180/pi,error_vec,linewidth = 2);
