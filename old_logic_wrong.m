@@ -19,7 +19,7 @@ plot_flag = 0;  %put 1 to plot
 [X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag);
 
 %% formulating and solving the problem
-a = lambda / 40; %side of the square patch
+a = lambda / 50; %side of the square patch
 r = a/sqrt(pi);    %radius of equivalent circle with same cross section
 
 %forming matrix C in the equation [C][E] = Ei
@@ -65,10 +65,7 @@ E = C\Ei';      %total electric field on the dielectric volume
 % with richmond's plot and plot abs(E) wrt the phi generated
 
 phi = linspace(0,200,length(E));
-AxesH = axes('YTick',0::, 'NextPlot', 'add');
-plot(phi,abs(E),linewidth = 3); 
-grid on; xlabel('\phi(degrees)'); ylabel('|E|');
-set(gca,'fontsize',20)
+plot(phi,abs(E));
 
 % now the problem is the wiggles in the plot, the envelope is matching with
 % the results of figure 3 in richmond's paper. Why are the wiggles coming?
@@ -80,3 +77,35 @@ set(gca,'fontsize',20)
 %(X1,Y1). So, when I am plotting E wrt anything on x-axis, it is just
 %showing the values of E stored in cell 1,2,3,... irrespective of the
 %x-axis
+
+
+
+
+% %% calculating the total field 
+% phi = linspace(0,pi,228);   %for circular variation around the shell
+% %rho0 = (0.3*lambda - 0.25*lambda) + 0.25*lambda;
+% rho0 = 0.5*lambda;          %distance where we want to check the field
+% 
+% %temporary variable 'temp' to store the amplitude of the field
+% temp = -1i * (pi * k / 2) * sqrt(2i / (pi * k * rho0)) ...
+%     * exp(-1i * k * rho0) * (epsilon-1) * r * besselj(1,(k * r)) ;
+% temp1 = cos(phi.')*X1 + sin(phi.')*Y1;  %to hold angular variation
+% Es = temp * exp(1i * k * temp1) * E;    %required field
+% Es = flip(abs(Es));                     %absolute value of the complex field
+% 
+% %% plotting the field w.r.t. phi variation
+% AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
+% plot(phi*180/pi,Es,'linewidth',3);
+% hold on; grid on; set(gca,'fontsize',20)
+% xlabel('\phi(degrees)');
+% ylabel('|E|');
+% 
+% %% extracted from richmond figure 3 (reference plot)
+% import_rr = load('extrd_fig3_rich.mat');
+% rr = import_rr.rr;
+% plot(rr(:,1),rr(:,2),linewidth = 2);
+% 
+% %% calculating the error between reference and implemented data
+% error_vec = Es - rr(:,2);
+% error = norm(error_vec);
+% % plot(phi*180/pi,error_vec,linewidth = 2);

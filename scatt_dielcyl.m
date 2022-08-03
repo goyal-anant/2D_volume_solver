@@ -11,14 +11,15 @@ E0       = 1;           %electric field amplitude
 k        = 2*pi/lambda; %wave vector
 outer    = 0.30;        %outer radius
 inner    = 0.25;        %inner radius
-N        = 50;          %no. of pixels in the space
 
 %% building the scatterer
 %function [X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag)
-[X1, Y1] = dielectric_shell(0.30,0.25,lambda,50,1);
+N         = 100; %no. of pixels in the space
+plot_flag = 0;  %put 1 to plot
+[X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag);
 
 %% formulating and solving the problem
-a = lambda / 20; %side of the square patch
+a = lambda / 50; %side of the square patch
 r = a/sqrt(pi);    %radius of equivalent circle with same cross section
 
 %forming matrix C in the equation [C][E] = Ei
@@ -41,37 +42,41 @@ Ei = E0 * exp(-1i * k * alpha);     %incident electric field
 E = C\Ei';      %total electric field on the dielectric volume
 
 %% getting the plot of E in terms of phi
-phi = atan(Y1./X1);
-phi = sort(phi);
-plot(phi*180/pi,abs(E));
-% xlim([0 180])
+% temp = 1;
+% for i = 1:length(X1)
+%     if X1(i) >= 0 && Y1(i) >= 0
+%         phi(temp) =  0 + abs(atan(Y1(i)/X1(i)));
+%         temp = temp + 1;
+%     elseif X1(i) <= 0 && Y1(i) >= 0
+%         phi(temp) =  pi - abs(atan(Y1(i)/X1(i)));
+%         temp = temp + 1;
+%     elseif X1(i) <= 0 && Y1(i) <= 0
+%         phi(temp) =  pi + abs(atan(Y1(i)/X1(i)));
+%         temp = temp + 1;
+%     elseif X1(i) >= 0 && Y1(i) <= 0
+%         phi(temp) =  2*pi - abs(atan(Y1(i)/X1(i)));
+%         temp = temp + 1;
+%     end
+% end
+% 
+% phi = sort(phi)*180/pi;
+% It does not matter where you start the phi from, whereever you start it
+% will keep on repeating, so generate a random phi from 0 to 200 to match
+% with richmond's plot and plot abs(E) wrt the phi generated
+
+phi = linspace(0,200,length(E));
+AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
+plot(phi,abs(E),linewidth = 3); 
+grid on; xlabel('\phi(degrees)'); ylabel('|E|');
+set(gca,'fontsize',20)
+
+% now the problem is the wiggles in the plot, the envelope is matching with
+% the results of figure 3 in richmond's paper. Why are the wiggles coming?
+% What is a possible solution.
 
 
-% %% calculating the total field 
-% phi = linspace(0,pi,228);   %for circular variation around the shell
-% %rho0 = (0.3*lambda - 0.25*lambda) + 0.25*lambda;
-% rho0 = 0.5*lambda;          %distance where we want to check the field
-% 
-% %temporary variable 'temp' to store the amplitude of the field
-% temp = -1i * (pi * k / 2) * sqrt(2i / (pi * k * rho0)) ...
-%     * exp(-1i * k * rho0) * (epsilon-1) * r * besselj(1,(k * r)) ;
-% temp1 = cos(phi.')*X1 + sin(phi.')*Y1;  %to hold angular variation
-% Es = temp * exp(1i * k * temp1) * E;    %required field
-% Es = flip(abs(Es));                     %absolute value of the complex field
-% 
-% %% plotting the field w.r.t. phi variation
-% AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
-% plot(phi*180/pi,Es,'linewidth',3);
-% hold on; grid on; set(gca,'fontsize',20)
-% xlabel('\phi(degrees)');
-% ylabel('|E|');
-% 
-% %% extracted from richmond figure 3 (reference plot)
-% import_rr = load('extrd_fig3_rich.mat');
-% rr = import_rr.rr;
-% plot(rr(:,1),rr(:,2),linewidth = 2);
-% 
-% %% calculating the error between reference and implemented data
-% error_vec = Es - rr(:,2);
-% error = norm(error_vec);
-% % plot(phi*180/pi,error_vec,linewidth = 2);
+%the problem I am facing here is that E contains the total electric field
+%in cell 1,2,3,... and I do not have the coordinate mapping of cells and
+%(X1,Y1). So, when I am plotting E wrt anything on x-axis, it is just
+%showing the values of E stored in cell 1,2,3,... irrespective of the
+%x-axis
