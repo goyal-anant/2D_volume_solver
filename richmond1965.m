@@ -5,7 +5,7 @@ function richmond1965(N)
     epsilonr = 4;           %relative permitivity of the dielectric shell
     epsilon  = epsilonr;     
     theta0   = pi/2;        %angle between z-axis and propagation axis
-    phi0     = 0;           %angle between x-axis and projection of k on xy plane
+    phi0     = pi;           %angle between x-axis and projection of k on xy plane
     lambda   = 1;           %wavelength 
     E0       = 1;           %electric field amplitude 
     k        = 2*pi/lambda; %wave vector
@@ -70,7 +70,7 @@ function richmond1965(N)
 
     AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
     figure(1);
-    plot(phi_E,abs(E),linewidth = 3); 
+    plot(phi_E,flip(abs(E)),linewidth = 3); 
     hold on; grid on; 
     plot(rr(:,1),rr(:,2),linewidth = 3);
     hold off; xlabel('\phi(degrees)'); ylabel('|E|');
@@ -108,10 +108,10 @@ function richmond1965(N)
     t3 = 1;%abs(Ei).^2;
     
     Wphi = (k*pi^2) * t2 / t3';
+    figure(2);
     
     AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
-    figure(2);
-    plot(phi*180/pi,flip(Wphi),'linewidth',3);
+    plot(phi*180/pi,Wphi,'linewidth',3);
     hold on; grid on; set(gca,'fontsize',20);
     xlabel('\phi(degrees)');
     ylabel('Echo width');
