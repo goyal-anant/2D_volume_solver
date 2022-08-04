@@ -15,7 +15,7 @@ for i = 1:length(N)
     %plotting the dielectric shell
     scatter(X1,Y1,'red','filled');
     axis('equal'); hold off;
-    title("N = " + N(i))
+    title("N = " + N(i) + ", patch size = \lambda/" + N(i)/2)
     set(gca,'fontsize',20)
 end
 

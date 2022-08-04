@@ -5,7 +5,7 @@ clc; clear all; close all;
 epsilonr = 4;           %relative permitivity of the dielectric shell
 epsilon  = epsilonr;     
 theta0   = pi/2;        %angle between z-axis and propagation axis
-phi0     = 0;           %angle between x-axis and projection of k on xy plane
+phi0     = pi;           %angle between x-axis and projection of k on xy plane
 lambda   = 1;           %wavelength 
 E0       = 1;           %electric field amplitude 
 k        = 2*pi/lambda; %wave vector
@@ -14,7 +14,7 @@ inner    = 0.25;        %inner radius
 
 %% building the scatterer
 %function [X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag)
-N         = 200; %no. of pixels in the space
+N         = 100; %no. of pixels in the space
 plot_flag = 0;  %put 1 to plot
 [X1,Y1,r,X,Y]   = dielectric_shell(outer,inner,lambda,N,plot_flag);
 
@@ -66,7 +66,7 @@ E = C\Ei';      %total electric field on the dielectric volume
 
 phi_E = linspace(0,200,length(E));
 AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
-plot(phi_E,abs(E),linewidth = 3); 
+plot(phi_E,flip(abs(E)),linewidth = 3); 
 hold on; grid on; xlabel('\phi(degrees)'); ylabel('|E|');
 set(gca,'fontsize',20)
 
@@ -91,7 +91,7 @@ plot(rr(:,1),rr(:,2),linewidth = 3);
 
 %% plotting the echowidth
 %distant scattered field
-phi = linspace(0,200*pi/180,500);   %for circular variation around the shell
+phi = linspace(0,200*pi/180,400);   %for circular variation around the shell
 % rho0 = 0.5*lambda;          %distance where we want to check the field
 
 %temporary variable 'temp' to store the amplitude of the field
@@ -107,8 +107,8 @@ t3 = 1;%abs(Ei).^2;
 
 Wphi = (k*pi^2) * t2 / t3';
 
-% AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
-% plot(phi*180/pi,flip(Wphi),'linewidth',3);
+% AxesH = axes('XTick',0:10:200, 'NextPlot', 'add');
+% plot(phi*180/pi,Wphi,'linewidth',3);
 % hold on; grid on; set(gca,'fontsize',20)
 % xlabel('\phi(degrees)');
 % ylabel('Echo width');
