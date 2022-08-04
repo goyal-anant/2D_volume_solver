@@ -6,7 +6,7 @@
 %%function returs the coordinates (X1,Y1) in the cartesian plane for the
 %%generated structure.
 
-function [X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag)
+function [X1, Y1, a, X, Y] = dielectric_shell(outer,inner,lambda,N,plot_flag)
     shellsize = lambda;      %temporary space to carve out the dielectric shell
     %N is the number of pixels in which space is broken
     x1    = linspace(-shellsize,shellsize,N);   %x-space of square space
@@ -24,6 +24,10 @@ function [X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag)
            Y1(t) = Y(m);
         end
     end
+
+    del = 2*lambda/N;
+    area_patch = del^2;
+    a =  del/sqrt(pi); %radius of equivalent circle
     
     if plot_flag == 1
         %plotting the square space

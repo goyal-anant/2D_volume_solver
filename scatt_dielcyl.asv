@@ -5,7 +5,7 @@ clc; clear all; close all;
 epsilonr = 4;           %relative permitivity of the dielectric shell
 epsilon  = epsilonr;     
 theta0   = pi/2;        %angle between z-axis and propagation axis
-phi0     = 0;           %angle between x-axis and projection of k on xy plane
+phi0     = pi;           %angle between x-axis and projection of k on xy plane
 lambda   = 1;           %wavelength 
 E0       = 1;           %electric field amplitude 
 k        = 2*pi/lambda; %wave vector
@@ -14,13 +14,13 @@ inner    = 0.25;        %inner radius
 
 %% building the scatterer
 %function [X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag)
-N         = 100; %no. of pixels in the space
+N         = 50; %no. of pixels in the space
 plot_flag = 0;  %put 1 to plot
-[X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag);
+[X1,Y1]   = dielectric_shell(outer,inner,lambda,N,plot_flag);
 
 %% formulating and solving the problem
-a = lambda / 40; %side of the square patch
-r = a/sqrt(pi);    %radius of equivalent circle with same cross section
+a = lambda/50;  %side of the square patch
+r = a/sqrt(pi); %radius of equivalent circle with same cross section
 
 %forming matrix C in the equation [C][E] = Ei
 for n = 1:length(X1)
@@ -64,11 +64,18 @@ E = C\Ei';      %total electric field on the dielectric volume
 % will keep on repeating, so generate a random phi from 0 to 200 to match
 % with richmond's plot and plot abs(E) wrt the phi generated
 
-phi = linspace(0,200,length(E));
-AxesH = axes('YTick',0::, 'NextPlot', 'add');
-plot(phi,abs(E),linewidth = 3); 
-grid on; xlabel('\phi(degrees)'); ylabel('|E|');
-set(gca,'fontsize',20)
+% phi_E = linspace(0,359,length(E));
+% AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
+% plot(phi_E,abs(E),linewidth = 3); 
+% hold on; grid on; xlabel('\phi(degrees)'); ylabel('|E|');
+% set(gca,'fontsize',20)
+
+% import_rr = load('extrd_fig3_rich.mat');
+% rr = import_rr.rr;
+% plot(rr(:,1),rr(:,2),linewidth = 2);
+% 
+% error_vec = Es - rr(:,2);
+% error = norm(error_vec);
 
 % now the problem is the wiggles in the plot, the envelope is matching with
 % the results of figure 3 in richmond's paper. Why are the wiggles coming?
@@ -80,3 +87,28 @@ set(gca,'fontsize',20)
 %(X1,Y1). So, when I am plotting E wrt anything on x-axis, it is just
 %showing the values of E stored in cell 1,2,3,... irrespective of the
 %x-axis
+
+
+%% plotting the echowidth
+%distant scattered field
+phi = linspace(0,200*pi/180,500);   %for circular variation around the shell
+% rho0 = 0.5*lambda;          %distance where we want to check the field
+
+%temporary variable 'temp' to store the amplitude of the field
+% temp = -1i * (pi * k / 2) * sqrt(2i / (pi * k * rho0)) ...
+%     * exp(-1i * k * rho0) * (epsilon-1) * r * besselj(1,(k * r)) ;
+temp1 = cos(phi.')*X1 + sin(phi.')*Y1;  % to hold angular variation
+% Es = temp * exp(1i * k * temp1) * E;  % distant scattered field
+
+t1 = (epsilon-1) * r * besselj(1,(k*r));
+t2 = t1*exp(1i * k * temp1) * E;
+t2 = abs(t2).^2;
+t3 = 1;%abs(Ei).^2;
+
+Wphi = (k*pi^2) * t2 / t3';
+
+AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
+plot(phi*180/pi,Wphi,'linewidth',3);
+hold on; grid on; set(gca,'fontsize',20)
+xlabel('\phi(degrees)');
+ylabel('Echo width');
