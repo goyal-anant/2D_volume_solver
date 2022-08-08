@@ -1,0 +1,19 @@
+clc; clear all; close all;
+
+%% plotting echowidth and E for different values of patch size
+
+N = [50 100 150 200];
+
+AxesH = axes('XTick',0:10:200, 'NextPlot', 'add');
+select_structure = 0; 
+for i = 1:length(N)
+    [phi, Wphi] = richmond1965(N(i),select_structure);
+    kk = num2str(N(i));
+    plot(phi*180/pi,Wphi,'linewidth',3,'DisplayName',strcat('patch size = \lambda/',num2str(N(i)/2)));
+    hold on; 
+end
+grid on; set(gca,'fontsize',20);
+xlabel('\phi(degrees)');
+ylabel('Echo width/ Wavelength');
+legend('FontSize',20)
+

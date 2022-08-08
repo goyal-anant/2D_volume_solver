@@ -1,8 +1,15 @@
-%%Function for richmond's scattering problem
-function richmond1965(N)
+%%Function for richmond's scattering problem. It takes two arguments and
+%%returns two vectors. The arguments are N which is the scale of
+%%discritization i.e. into how many squares you want to break the structure
+%%and select_structure which is a binary variable that takes 0 for
+%%dielectric shell and 1 for dielectric half shell. The reutrning variables
+%%phi is the angular variation of shell and Wphi is the
+%%echowidth/wavelength of the structure wrt phi.
+
+function [phi, Wphi] = richmond1965(N,select_structure)
     %% defining constants
     % epsilon0 = 8.853e-12;
-    epsilonr = 4;           %relative permitivity of the dielectric shell
+    epsilonr = 1.8e+100;           %relative permitivity of the dielectric shell
     epsilon  = epsilonr;     
     theta0   = pi/2;        %angle between z-axis and propagation axis
     phi0     = pi;           %angle between x-axis and projection of k on xy plane
@@ -16,7 +23,11 @@ function richmond1965(N)
     %function [X1, Y1] = dielectric_shell(outer,inner,lambda,N,plot_flag)
     %N         = 200; %no. of pixels in the space
     plot_flag = 0;  %put 1 to plot
-    [X1,Y1,r,X,Y]   = dielectric_shell(outer,inner,lambda,N,plot_flag);
+    if select_structure == 1
+        [X1,Y1,r,X,Y]   = dielectric_half_shell(outer,inner,lambda,N,plot_flag);
+    else
+        [X1,Y1,r,X,Y]   = dielectric_shell(outer,inner,lambda,N,plot_flag);
+    end
     
     %% formulating and solving the problem
     %a = %lambda/50;  %side of the square patch
@@ -64,17 +75,17 @@ function richmond1965(N)
     % will keep on repeating, so generate a random phi from 0 to 200 to match
     % with richmond's plot and plot abs(E) wrt the phi generated
     
-    phi_E = linspace(0,200,length(E));
-    import_rr = load('extrd_fig3_rich.mat');
-    rr = import_rr.rr;
-
-    AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
-    figure(1);
-    plot(phi_E,flip(abs(E)),linewidth = 3); 
-    hold on; grid on; 
-    plot(rr(:,1),rr(:,2),linewidth = 3);
-    hold off; xlabel('\phi(degrees)'); ylabel('|E|');
-    set(gca,'fontsize',20);
+%     phi_E = linspace(0,200,length(E));
+%     import_rr = load('extrd_fig3_rich.mat');
+%     rr = import_rr.rr;
+% 
+%     AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
+%     figure(1);
+%     plot(phi_E,flip(abs(E)),linewidth = 3); 
+%     hold on; grid on; 
+%     plot(rr(:,1),rr(:,2),linewidth = 3);
+%     hold off; xlabel('\phi(degrees)'); ylabel('|E|');
+%     set(gca,'fontsize',20);
 
     % error_vec = abs(E) - rr(:,2);
     % error = norm(error_vec);
@@ -108,11 +119,10 @@ function richmond1965(N)
     t3 = 1;%abs(Ei).^2;
     
     Wphi = (k*pi^2) * t2 / t3';
-    figure(2);
     
-    AxesH = axes('XTick',0:10:180, 'NextPlot', 'add');
-    plot(phi*180/pi,Wphi,'linewidth',3);
-    hold on; grid on; set(gca,'fontsize',20);
-    xlabel('\phi(degrees)');
-    ylabel('Echo width');
+%     AxesH = axes('XTick',0:10:200, 'NextPlot', 'add');
+%     plot(phi*180/pi,Wphi,'linewidth',3);
+%     grid on; set(gca,'fontsize',20);
+%     xlabel('\phi(degrees)');
+%     ylabel('Echo width/ Wavelength');
 end

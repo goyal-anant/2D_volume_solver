@@ -17,7 +17,7 @@ inner    = 0.25;        %inner radius
 N         = 100; %no. of pixels in the space
 plot_flag = 0;  %put 1 to plot
 [X1,Y1,r,X,Y]   = dielectric_shell(outer,inner,lambda,N,plot_flag);
-
+% [X1, Y1, r, X, Y] = dielectric_half_shell(outer,inner,lambda,N,plot_flag);
 %% formulating and solving the problem
 %a = %lambda/50;  %side of the square patch
 % r = a/sqrt(pi); %radius of equivalent circle with same cross section
@@ -64,15 +64,15 @@ E = C\Ei';      %total electric field on the dielectric volume
 % will keep on repeating, so generate a random phi from 0 to 200 to match
 % with richmond's plot and plot abs(E) wrt the phi generated
 
-phi_E = linspace(0,200,length(E));
-AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
-plot(phi_E,flip(abs(E)),linewidth = 3); 
-hold on; grid on; xlabel('\phi(degrees)'); ylabel('|E|');
-set(gca,'fontsize',20)
-
-import_rr = load('extrd_fig3_rich.mat');
-rr = import_rr.rr;
-plot(rr(:,1),rr(:,2),linewidth = 3);
+% phi_E = linspace(0,200,length(E));
+% AxesH = axes('YTick',0:0.1:2, 'NextPlot', 'add');
+% plot(phi_E,flip(abs(E)),linewidth = 3); 
+% hold on; grid on; xlabel('\phi(degrees)'); ylabel('|E|');
+% set(gca,'fontsize',20)
+% 
+% import_rr = load('extrd_fig3_rich.mat');
+% rr = import_rr.rr;
+% plot(rr(:,1),rr(:,2),linewidth = 3);
 
 % error_vec = abs(E) - rr(:,2);
 % error = norm(error_vec);
@@ -107,8 +107,8 @@ t3 = 1;%abs(Ei).^2;
 
 Wphi = (k*pi^2) * t2 / t3';
 
-% AxesH = axes('XTick',0:10:200, 'NextPlot', 'add');
-% plot(phi*180/pi,Wphi,'linewidth',3);
-% hold on; grid on; set(gca,'fontsize',20)
-% xlabel('\phi(degrees)');
-% ylabel('Echo width');
+AxesH = axes('XTick',0:10:200, 'NextPlot', 'add');
+plot(phi*180/pi,Wphi,'linewidth',3);
+hold on; grid on; set(gca,'fontsize',20)
+xlabel('\phi(degrees)');
+ylabel('Echo width/ Wavelength');
